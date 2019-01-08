@@ -34,6 +34,7 @@ class Game extends React.Component {
 		this.state = {
 			squares: this.createBoard()
 		}
+		this.handleClick = this.handleClick.bind(this);
 	}
 
 	createBoard() {
@@ -45,6 +46,10 @@ class Game extends React.Component {
 			}
 		}
 		return board;
+	}
+
+	handleClick(r, c) {
+		this.board[r][c] = true;
 	}
 
 	render() {
