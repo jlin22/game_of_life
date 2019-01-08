@@ -13,8 +13,16 @@ class Square extends React.Component {
 //Board manages the squares
 class Board extends React.Component {
 	render() {
-		const squareList = this.props.squares;
-		return <Square />;
+		const squares = this.props.squares;
+		var squareList = [];
+		for (var r = 0; r < squares.length; r++) {
+			var squareRow = [];
+			for (var c = 0; c < squares[r].length; c++) {
+				squareRow.push(<Square key={squares.length * r + c}/>);	
+			}
+			squareList.push(<div key={r} className="board-row">{squareRow}</div>);
+		}
+		return <div>{squareList}</div>;
 	}
 }
 
@@ -39,8 +47,7 @@ class Game extends React.Component {
 	}
 
 	render() {
-		console.log(this.state.squares);
-		return <Board />;
+		return <Board squares={this.state.squares}/>;
 	}
 }
 
