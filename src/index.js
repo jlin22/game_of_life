@@ -51,6 +51,7 @@ class Game extends React.Component {
 			squares: this.createBoard()
 		}
 		this.handleClick = this.handleClick.bind(this);
+		this.updateBoard = this.updateBoard.bind(this);
 	}
 
 	createBoard() {
@@ -65,8 +66,11 @@ class Game extends React.Component {
 	}
 
 	componentDidMount() {
-		this.interval = setInterval(() =>
-			{if (this.props.started) {this.updateBoard()}}, 1000);
+		this.interval = setInterval(() => {
+			if (this.props.started) {
+				this.updateBoard();
+			}
+		}, 1000);
 	}
 
 	componentWillUnmount() {
@@ -78,11 +82,9 @@ class Game extends React.Component {
 		var numRows = this.state.squares.length;
 		//Assumption: numCols are the same for all rows
 		var numCols = this.state.squares[0].length;
-		var n = [];
 		for (var r = 0; r < numRows; r++) {
 			for (var c = 0; c < numCols; c++) {
 				const neighbors = getNumberOfNeighbors(squares, r, c);
-				n.push(neighbors)
 
 				if (squares[r][c]) {
 					if (neighbors === 2 || neighbors === 3)
@@ -98,7 +100,6 @@ class Game extends React.Component {
 				}
 			}
 		}
-		console.log(n);
 		this.setState({
 			squares: squares
 		});
@@ -154,9 +155,14 @@ class GameInput extends React.Component {
 		return (
 			<div className="gameInput">
 				<button 
-					onClick={() => this.props.handleStart()}>
+					onClick={() => this.props.handleStart()}
+				>
 					{startValue}
 				</button>
+				<input
+					type="number"
+					onChange={(event) => this.props.handleStep(event)}
+				/>
 			</div>
 		);
 	}
@@ -166,9 +172,11 @@ class App extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			started: false
+			started: false,
+			step: 1000
 		}
 		this.handleStart = this.handleStart.bind(this);
+		this.handleStep = this.handleStep.bind(this);
 	}
 
 	handleStart() {
@@ -177,16 +185,25 @@ class App extends React.Component {
 		});
 	}
 
+	handleStep(event) {
+		this.setState({
+			step: parseInt(event.target.value)
+		})
+	}
+
 	render() {
 		return (
 			<div className="app">	
 				<Game 
 					rows="5"
 					cols="5"
-					started={this.state.started}/>
+					started={this.state.started}
+				/>
 				<GameInput 
 					handleStart={this.handleStart}
-					started={this.state.started}/>
+					started={this.state.started}
+					handleStep={this.handleStep}	
+				/>
 			</div>
 		);
 	}
