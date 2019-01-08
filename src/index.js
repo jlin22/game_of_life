@@ -70,7 +70,20 @@ class Game extends React.Component {
 			if (this.props.started) {
 				this.updateBoard();
 			}
-		}, 1000);
+		}, this.props.step);
+		console.log(this.props.step);
+	}
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		if (this.props.step !== prevProps.step) {
+			clearInterval(this.interval);
+			this.interval = setInterval(() => {
+				if (this.props.started) {
+					this.updateBoard();
+				}
+			}, this.props.step);
+			console.log(this.props.step);
+		}
 	}
 
 	componentWillUnmount() {
@@ -151,7 +164,7 @@ function getNumberOfNeighbors(squares, r, c) {
 
 class GameInput extends React.Component {
 	render() {
-		const startValue = this.props.started ? 'Stop' : 'Started';
+		const startValue = this.props.started ? 'Stop' : 'Start';
 		return (
 			<div className="gameInput">
 				<button 
@@ -159,10 +172,13 @@ class GameInput extends React.Component {
 				>
 					{startValue}
 				</button>
-				<input
-					type="number"
-					onChange={(event) => this.props.handleStep(event)}
-				/>
+				<label>Step in milliseconds:
+					<input
+						type="number"
+						value={this.props.step}
+						onChange={(event) => this.props.handleStep(event)}
+					/>
+				</label>
 			</div>
 		);
 	}
@@ -198,11 +214,13 @@ class App extends React.Component {
 					rows="5"
 					cols="5"
 					started={this.state.started}
+					step={this.state.step}
 				/>
 				<GameInput 
 					handleStart={this.handleStart}
 					started={this.state.started}
 					handleStep={this.handleStep}	
+					step={this.state.step}
 				/>
 			</div>
 		);
