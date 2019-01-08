@@ -105,7 +105,6 @@ class Game extends React.Component {
 				}
 			}
 		}
-		console.log(squares)
 		this.setState({
 			squares: squares
 		});
@@ -132,11 +131,12 @@ class Game extends React.Component {
 
 class GameInput extends React.Component {
 	render() {
+		const startValue = this.props.started ? 'Start' : 'Stop';
 		return (
 			<div className="gameInput">
 				<button 
 					onClick={() => this.props.handleStart()}>
-					Start
+					{startValue}
 				</button>
 			</div>
 		);
@@ -166,7 +166,8 @@ class App extends React.Component {
 					cols="20"
 					started={this.state.started}/>
 				<GameInput 
-					handleStart={this.handleStart}/>
+					handleStart={this.handleStart}
+					started={this.state.started}/>
 			</div>
 		);
 	}
