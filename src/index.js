@@ -74,7 +74,7 @@ class Game extends React.Component {
 	}
 
 	updateBoard() {
-		const squares = this.state.squares;
+		var squares = this.state.squares.slice();
 		for (var r = 0; r < squares.length; r++) {
 			for (var c = 0; c < squares[r].length; c++) {
 				var neighbors = 0;
@@ -91,18 +91,28 @@ class Game extends React.Component {
 					neighbors++
 				}
 
-				if (squares[r][c] && neighbors < 2)
-					squares[r][c] = false; 
-				else if (squares[r][c] && neighbors > 3)
-					squares[r][c] = false;
-				if (!squares[r][c] && neighbors === 3)
-					squares[r][c] = true;
+				if (squares[r][c]) {
+					if (neighbors === 2 || neighbors === 3)
+						squares[r][c] = false;
+					else
+						squares[r][c] = true;
+				}
+				else {
+					if (neighbors === 3)
+						squares[r][c] = true;
+					else
+						squares[r][c] = false;
+				}
 			}
 		}
+		console.log(squares)
+		this.setState({
+			squares: squares
+		});
 	}
 
 	handleClick(r, c) {
-		const squares = this.state.squares.slice();
+		var squares = this.state.squares.slice();
 		squares[r][c] = !squares[r][c];
 		this.setState({
 			squares: squares
