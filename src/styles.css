@@ -16,10 +16,13 @@ body {
 .game {
 	display: flex;
 	flex-direction: row;
+	float: left;
+	padding: 0px 25px 0px 0px;
 }
 
 .game-input {
 	margin-left: 20px;
+	float: left;
 }
 
 

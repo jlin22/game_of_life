@@ -95,7 +95,6 @@ class Game extends React.Component {
 		var numRows = this.state.squares.length;
 		//Assumption: numCols are the same for all rows
 		var numCols = this.state.squares[0].length;
-		console.log(squares);
 		for (var r = 0; r < numRows; r++) {
 			for (var c = 0; c < numCols; c++) {
 				const numberOfNeighbors = getNumberOfNeighbors(squares, r, c);
@@ -161,18 +160,34 @@ class GameInput extends React.Component {
 		const startValue = this.props.started ? 'Stop' : 'Start';
 		return (
 			<div className="gameInput">
-				<button 
-					onClick={() => this.props.handleStart()}
-				>
+				<div className="start">
+					<button className="gameButtons"
+						onClick={() => this.props.handleStart()}
+					>
 					{startValue}
-				</button>
-				<label>Step in milliseconds:
+					</button>
+				</div>
+				<div className="step">
+					<label>Step in milliseconds:
+						<input
+							type="number"
+							value={this.props.step}
+							onChange={(event) => this.props.handleStep(event)}
+						/>
+				</label>
+				</div>
+				<div className="dimensions">
 					<input
 						type="number"
-						value={this.props.step}
-						onChange={(event) => this.props.handleStep(event)}
+						value={this.props.rows}
+						onChange={(event) => this.props.handleRows(event)}
 					/>
-				</label>
+					<input
+						type="number"
+						value={this.props.cols}
+						onChange={(event) => this.props.handleCols(event)}
+					/>
+				</div>
 			</div>
 		);
 	}
@@ -183,10 +198,14 @@ class App extends React.Component {
 		super();
 		this.state = {
 			started: false,
-			step: 1000
+			step: 1000,
+			rows: 7,
+			cols: 7,
 		}
 		this.handleStart = this.handleStart.bind(this);
 		this.handleStep = this.handleStep.bind(this);
+		this.handleRows = this.handleRows.bind(this);
+		this.handleCols = this.handleCols.bind(this);
 	}
 
 	handleStart() {
@@ -201,12 +220,24 @@ class App extends React.Component {
 		})
 	}
 
+	handleRows(event) {
+		this.setState({
+			rows: parseInt(event.target.value)
+		})
+	}
+
+	handleCols(event) {
+		this.setState({
+			cols: parseInt(event.target.value)
+		})
+	}
+
 	render() {
 		return (
 			<div className="app">	
 				<Game 
-					rows="5"
-					cols="5"
+					rows={this.state.rows}
+					cols={this.state.cols}
 					started={this.state.started}
 					step={this.state.step}
 				/>
@@ -215,6 +246,10 @@ class App extends React.Component {
 					started={this.state.started}
 					handleStep={this.handleStep}	
 					step={this.state.step}
+					handleRows={this.handleRows}
+					rows={this.state.rows}
+					handleCols={this.handleCols}
+					cols={this.state.cols}
 				/>
 			</div>
 		);
