@@ -71,7 +71,6 @@ class Game extends React.Component {
 				this.updateBoard();
 			}
 		}, this.props.step);
-		console.log(this.props.step);
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
@@ -82,7 +81,6 @@ class Game extends React.Component {
 					this.updateBoard();
 				}
 			}, this.props.step);
-			console.log(this.props.step);
 		}
 	}
 
@@ -92,17 +90,16 @@ class Game extends React.Component {
 
 	updateBoard() {
 		const squares = this.state.squares.slice();
-		var newSquares = this.state.squares.slice();
+		var newSquares = this.createBoard(); 
 
 		var numRows = this.state.squares.length;
 		//Assumption: numCols are the same for all rows
 		var numCols = this.state.squares[0].length;
+		console.log(squares);
 		for (var r = 0; r < numRows; r++) {
 			for (var c = 0; c < numCols; c++) {
 				const numberOfNeighbors = getNumberOfNeighbors(squares, r, c);
 				newSquares[r][c] = transition(squares[r][c], numberOfNeighbors);
-				if (r >= 2 && r <= 3)
-					console.log(r, c, newSquares[r][c], numberOfNeighbors);
 			}
 		}
 		this.setState({
