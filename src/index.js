@@ -83,8 +83,20 @@ class Game extends React.Component {
 	}
 }
 
+class App extends React.Component {
+	render() {
+		return (
+			<div className="app">
+				<Game 
+					rows="20"
+					cols="20"/>
+			</div>
+		);
+	}
+}
+
 ReactDOM.render(
-	<Game rows="20" cols="20"/>,
+	<App />
 	document.getElementById('root')
 );
 
