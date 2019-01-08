@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './styles.css';
 
 class Square extends React.Component {
 	render() {
@@ -47,7 +48,11 @@ class Game extends React.Component {
 	}
 
 	render() {
-		return <Board squares={this.state.squares}/>;
+		return ( 
+			<div className="game">
+				<Board squares={this.state.squares}/>
+			</div>
+		);
 	}
 }
 
