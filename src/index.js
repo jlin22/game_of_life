@@ -91,30 +91,22 @@ class Game extends React.Component {
 	}
 
 	updateBoard() {
-		var squares = this.state.squares.slice();
+		const squares = this.state.squares.slice();
+		var newSquares = this.state.squares.slice();
+
 		var numRows = this.state.squares.length;
 		//Assumption: numCols are the same for all rows
 		var numCols = this.state.squares[0].length;
 		for (var r = 0; r < numRows; r++) {
 			for (var c = 0; c < numCols; c++) {
-				const neighbors = getNumberOfNeighbors(squares, r, c);
-
-				if (squares[r][c]) {
-					if (neighbors === 2 || neighbors === 3)
-						squares[r][c] = true;
-					else
-						squares[r][c] = false;
-				}
-				else {
-					if (neighbors === 3)
-						squares[r][c] = true;
-					else
-						squares[r][c] = false;
-				}
+				const numberOfNeighbors = getNumberOfNeighbors(squares, r, c);
+				newSquares[r][c] = transition(squares[r][c], numberOfNeighbors);
+				if (r >= 2 && r <= 3)
+					console.log(r, c, newSquares[r][c], numberOfNeighbors);
 			}
 		}
 		this.setState({
-			squares: squares
+			squares: newSquares
 		});
 	}
 
@@ -160,6 +152,11 @@ function getNumberOfNeighbors(squares, r, c) {
 	}
 
 	return neighbors;
+}
+
+function transition(isAlive, numberOfNeighbors) {
+	return (isAlive && (numberOfNeighbors === 2 || numberOfNeighbors === 3))
+				 || (!isAlive && (numberOfNeighbors === 3));
 }
 
 class GameInput extends React.Component {
