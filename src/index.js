@@ -75,27 +75,20 @@ class Game extends React.Component {
 
 	updateBoard() {
 		var squares = this.state.squares.slice();
-		for (var r = 0; r < squares.length; r++) {
-			for (var c = 0; c < squares[r].length; c++) {
-				var neighbors = 0;
-				if (r + 1 < squares.length && squares[r + 1][c]) {
-					neighbors++
-				}
-				else if (r - 1 >= 0 && squares[r - 1][c]) {
-					neighbors++
-				}
-				else if (c - 1 >= 0 && squares[r][c - 1]) {
-					neighbors++
-				}
-				else if (c + 1 <= squares[r].length && squares[r][c + 1]) {
-					neighbors++
-				}
+		var numRows = this.state.squares.length;
+		//Assumption: numCols are the same for all rows
+		var numCols = this.state.squares[0].length;
+		var n = [];
+		for (var r = 0; r < numRows; r++) {
+			for (var c = 0; c < numCols; c++) {
+				const neighbors = getNumberOfNeighbors(squares, r, c);
+				n.push(neighbors)
 
 				if (squares[r][c]) {
 					if (neighbors === 2 || neighbors === 3)
-						squares[r][c] = false;
-					else
 						squares[r][c] = true;
+					else
+						squares[r][c] = false;
 				}
 				else {
 					if (neighbors === 3)
@@ -105,6 +98,7 @@ class Game extends React.Component {
 				}
 			}
 		}
+		console.log(n);
 		this.setState({
 			squares: squares
 		});
@@ -129,9 +123,34 @@ class Game extends React.Component {
 	}
 }
 
+function inBounds(r, c, numRows, numCols) {
+	return (r < numRows && r >= 0 &&
+					c < numCols && c >= 0); 
+}
+
+function getNumberOfNeighbors(squares, r, c) {
+	const numRows = squares.length;
+	const numCols = squares[0].length;
+
+	const offsets = [[-1, -1], [-1, 0], [-1, 1], [0, 1],
+		[1, 1], [1, 0], [1, -1], [0, -1]];
+
+	var neighbors = 0;
+	for (var i = 0; i < offsets.length; i++) {
+		const rowOffset = offsets[i][0];
+		const colOffset = offsets[i][1];
+		if (inBounds(r + rowOffset, c + colOffset, numRows, numCols)
+				&& squares[r + rowOffset][c + colOffset]) {
+			neighbors++;
+		}
+	}
+
+	return neighbors;
+}
+
 class GameInput extends React.Component {
 	render() {
-		const startValue = this.props.started ? 'Start' : 'Stop';
+		const startValue = this.props.started ? 'Stop' : 'Started';
 		return (
 			<div className="gameInput">
 				<button 
@@ -162,8 +181,8 @@ class App extends React.Component {
 		return (
 			<div className="app">	
 				<Game 
-					rows="20"
-					cols="20"
+					rows="5"
+					cols="5"
 					started={this.state.started}/>
 				<GameInput 
 					handleStart={this.handleStart}
