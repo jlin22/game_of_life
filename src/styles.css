@@ -14,5 +14,10 @@ body {
 }
 
 .game {
-	display: flex
+	display: flex;
+	flex-direction: row;
+}
+
+.game-input {
+	margin-left: 20px;
 }

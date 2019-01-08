@@ -64,6 +64,43 @@ class Game extends React.Component {
 		return board;
 	}
 
+	componentDidMount() {
+		this.interval = setInterval(() =>
+			{if (this.props.started) {this.updateBoard()}}, 1000);
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.interval);
+	}
+
+	updateBoard() {
+		const squares = this.state.squares;
+		for (var r = 0; r < squares.length; r++) {
+			for (var c = 0; c < squares[r].length; c++) {
+				var neighbors = 0;
+				if (r + 1 < squares.length && squares[r + 1][c]) {
+					neighbors++
+				}
+				else if (r - 1 >= 0 && squares[r - 1][c]) {
+					neighbors++
+				}
+				else if (c - 1 >= 0 && squares[r][c - 1]) {
+					neighbors++
+				}
+				else if (c + 1 <= squares[r].length && squares[r][c + 1]) {
+					neighbors++
+				}
+
+				if (squares[r][c] && neighbors < 2)
+					squares[r][c] = false; 
+				else if (squares[r][c] && neighbors > 3)
+					squares[r][c] = false;
+				if (!squares[r][c] && neighbors === 3)
+					squares[r][c] = true;
+			}
+		}
+	}
+
 	handleClick(r, c) {
 		const squares = this.state.squares.slice();
 		squares[r][c] = !squares[r][c];
@@ -83,20 +120,49 @@ class Game extends React.Component {
 	}
 }
 
-class App extends React.Component {
+class GameInput extends React.Component {
 	render() {
 		return (
-			<div className="app">
+			<div className="gameInput">
+				<button 
+					onClick={() => this.props.handleStart()}>
+					Start
+				</button>
+			</div>
+		);
+	}
+}
+
+class App extends React.Component {
+	constructor() {
+		super();
+		this.state = {
+			started: false
+		}
+		this.handleStart = this.handleStart.bind(this);
+	}
+
+	handleStart() {
+		this.setState({
+			started: !this.state.started
+		});
+	}
+
+	render() {
+		return (
+			<div className="app">	
 				<Game 
 					rows="20"
-					cols="20"/>
+					cols="20"
+					started={this.state.started}/>
+				<GameInput 
+					handleStart={this.handleStart}/>
 			</div>
 		);
 	}
 }
 
 ReactDOM.render(
-	<App />
+	<App />,
 	document.getElementById('root')
 );
-
